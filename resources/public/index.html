@@ -1,0 +1,54 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+  <meta http-equiv="refresh" content="{{refresh_seconds}}">
+  <title>{{node}}</title>
+  <link rel="stylesheet" href="/doom-monokai.css">
+</head>
+
+<body>
+  <div class="wrap">
+    <div class="title">{{node}}<span class="cursor"></span></div>
+    <div class="subtitle">{{role}} · {{ip}}</div>
+
+    <div class="grid">
+      <div class="card">
+        <div class="k">nREPL</div>
+        <div class="v good">:{{nrepl_port}}</div>
+        <div class="hint">CIDER target</div>
+      </div>
+
+      <div class="card">
+        <div class="k">dashboard</div>
+        <div class="v warn">:{{http_port}}</div>
+        <div class="hint">kiosk UI</div>
+      </div>
+
+      <div class="card">
+        <div class="k">status</div>
+        <div class="v mono">online</div>
+        <div class="hint">alive and listening</div>
+      </div>
+
+      <div class="card">
+        <div class="k">theme</div>
+        <div class="v mono">doom-monokai</div>
+        <div class="hint">OLED-friendly</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modeline">
+    <div>
+      <span class="tag"><span class="label">node</span> <span class="value">{{node}}</span></span>
+      <span class="tag"><span class="label">role</span> <span class="value">{{role}}</span></span>
+    </div>
+    <div>
+      <span class="tag"><span class="label">ip</span> <span class="value">{{ip}}</span></span>
+      <span class="tag"><span class="label">http</span> <span class="value">:{{http_port}}</span></span>
+    </div>
+  </div>
+</body>
+</html>
