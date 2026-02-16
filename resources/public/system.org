@@ -1,0 +1,26 @@
+#+title: slab-01 · system
+#+export_file_name: system.html
+#+options: html-style:nil html-scripts:nil toc:nil num:nil html-preamble:nil html-postamble:nil
+#+html_head: <link rel="stylesheet" href="/doom-monokai.css">
+#+html_head: <script defer src="/slab.js"></script>
+#+html_head: <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+[[/][dashboard]] [[/system.html][system]] [[/git.html][git]] [[/event.html][event]] [[/notes.html][notes]] [[/about.html][about]]
+
+* SYSTEM
+
+#+begin_example
+android   15
+kernel    6.1.99-android14
+cpu       Tensor (8)
+java      17.0.18
+#+end_example
+
+* NETWORK
+
+#+begin_example
+ip        192.168.0.106
+wifi      (ssid)
+#+end_example
+
+pixel-slab · system · 09:41

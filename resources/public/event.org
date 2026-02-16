@@ -1,0 +1,22 @@
+#+title: slab-01 · event
+#+export_file_name: event.html
+#+options: html-style:nil html-scripts:nil toc:nil num:nil html-preamble:nil html-postamble:nil
+#+html_head: <link rel="stylesheet" href="/doom-monokai.css">
+#+html_head: <script defer src="/slab.js"></script>
+#+html_head: <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+[[/][dashboard]] [[/system.html][system]] [[/git.html][git]] [[/event.html][event]] [[/notes.html][notes]] [[/about.html][about]]
+
+* LAST EVENT
+
+#+begin_example
+pigeonbot: whassup my dude
+#+end_example
+
+* QUEUE
+
+#+begin_example
+pending   0
+#+end_example
+
+pixel-slab · event · 09:41

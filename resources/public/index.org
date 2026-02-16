@@ -1,0 +1,28 @@
+#+title: slab-01 · dashboard
+#+export_file_name: index.html
+#+options: html-style:nil html-scripts:nil toc:nil num:nil html-preamble:nil html-postamble:nil
+#+html_head: <link rel="stylesheet" href="/doom-monokai.css">
+#+html_head: <script defer src="/slab.js"></script>
+#+html_head: <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+[[/][dashboard]] [[/system.html][system]] [[/git.html][git]] [[/event.html][event]] [[/notes.html][notes]] [[/about.html][about]]
+
+* STATUS
+
+#+begin_example
+uptime    3 days, 12 hours
+load      0.22 · 0.11 · 0.08
+mem       4.1 GiB / 11.2 GiB
+disk      6.2 GiB / 110 GiB
+battery   82% · charging
+#+end_example
+
+* QUICK
+
+#+begin_example
+nrepl     7888
+http      8080
+git       a1b2c3 · clean
+#+end_example
+
+pixel-slab · nrepl:7888 · http:8080 · git:a1b2c3 · 09:41

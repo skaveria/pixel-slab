@@ -1,0 +1,19 @@
+#+title: slab-01 · notes
+#+export_file_name: notes.html
+#+options: html-style:nil html-scripts:nil toc:nil num:nil html-preamble:nil html-postamble:nil
+#+html_head: <link rel="stylesheet" href="/doom-monokai.css">
+#+html_head: <script defer src="/slab.js"></script>
+#+html_head: <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+[[/][dashboard]] [[/system.html][system]] [[/git.html][git]] [[/event.html][event]] [[/notes.html][notes]] [[/about.html][about]]
+
+* NOTES
+
+This document set is the operating surface.
+
+- Org is the source of truth.
+- HTML is the render artifact.
+- CSS/JS provide the battlestation shell.
+- Clojure backend is authoritative when present.
+
+pixel-slab · notes · 09:41
