@@ -75,6 +75,7 @@ h1{
   background: rgba(16,19,23,0.98);
   border-bottom: 1px solid var(--line);
 
+  padding-top: 10px;
   font-size: 22px;
   font-weight: 800;
   color: var(--green);
