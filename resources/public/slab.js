@@ -9,8 +9,15 @@ function escapeHtml(s) {
 
 function classifyValue(v) {
   const t = v.toLowerCase();
-  if (t.includes("error") || t.includes("failed")) return "bad";
-  if (t.includes("warn") || t.includes("charging") || t.includes("dirty")) return "warn";
+
+  // "bad" (pink)
+  if (t.includes("error") || t.includes("failed") || t.includes("offline") || t.includes("down"))
+    return "bad";
+
+  // "warn" (orange)
+  if (t.includes("warn") || t.includes("charging") || t.includes("dirty") || t.includes("throttl") || t.includes("hot"))
+    return "warn";
+
   return "";
 }
 

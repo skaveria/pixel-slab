@@ -198,6 +198,78 @@ p{
 }
 strong{ color: var(--green); }
 
+/* Clojure-y pane decorations */
+pre.example{
+  border-left: 2px solid rgba(102,217,239,0.65); /* cyan spine */
+}
+
+pre.example .kv{
+  /* add a subtle top stripe like a focused pane */
+  box-shadow: inset 0 2px 0 rgba(253,151,31,0.35);
+}
+
+/* Key/value row feel: a faint separator line */
+pre.example .kv{
+  background: linear-gradient(to bottom, rgba(15,18,22,0.0), rgba(15,18,22,0.0));
+}
+
+pre.example .row{
+  /* not actually used (display: contents), but keep for clarity */
+}
+
+/* Make keys look like Clojure keywords */
+pre.example .k{
+  color: var(--green);
+  font-weight: 800;
+}
+
+/* Add a colon prefix to keys */
+pre.example .k::before{
+  content: ":";
+  color: var(--cyan);
+  margin-right: 2px;
+  opacity: 0.95;
+}
+
+/* Add a subtle arrow separator between key and value */
+pre.example .v::before{
+  content: "  ";
+}
+
+pre.example .v{
+  color: var(--fg);
+}
+
+/* Orange and pink usage */
+pre.example .warn{
+  color: var(--orange);
+  font-weight: 700;
+}
+
+pre.example .bad{
+  color: var(--pink);
+  font-weight: 800;
+}
+
+/* Dim the separators a bit more */
+pre.example .sep{
+  color: var(--dim);
+}
+
+/* Make the modeline pop slightly with orange */
+body > p:last-of-type{
+  box-shadow: inset 0 2px 0 rgba(253,151,31,0.35);
+}
+
+/* Optional: make links in the workspace bar a bit more monokai */
+h1 + p a:hover{
+  border-bottom-color: var(--orange);
+}
+h1 + p a:first-child{
+  border-bottom-color: var(--orange);
+}
+
+
 /* ---------- Example panes (Org #+begin_example) ----------
    slab.js rewrites pre.example into a grid of .k/.v rows.
 */
