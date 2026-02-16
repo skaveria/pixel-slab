@@ -4,7 +4,7 @@
      h1            -> top system bar
      h1 + p        -> workspace strip (horizontal scroll)
      h2            -> section header block
-     dl/dt/dd      -> aligned fastfetch-style stats
+     pre.example   -> terminal panes (from #+begin_example)
      body > p:last -> modeline
 */
 
@@ -28,18 +28,16 @@
 
   /* Geometry */
   --padx: 1.9rem;          /* curved-edge comfort */
-  --topbar-h: 68px;        /* fixed */
-  --workbar-h: 44px;       /* fixed, single-line */
-  --modeline-h: 44px;      /* fixed, readable */
+  --topbar-h: 68px;        /* you tuned this */
+  --workbar-h: 44px;       /* single-line scroll */
+  --modeline-h: 44px;      /* readable */
 
-  /* Spacing rhythm */
-  --content-gap-top: 22px; /* space below bars before first block */
+  /* Rhythm */
+  --content-gap-top: 22px;
   --section-gap: 22px;
-  --block-pad-y: 12px;
-  --block-pad-x: 12px;
 
   /* Typography */
-  --font: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+  --font: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
           "Liberation Mono", "DejaVu Sans Mono", monospace;
 }
 
@@ -68,7 +66,7 @@ body{
   padding-right: var(--padx);
 }
 
-/* unify safe-area math with the non-safe-area branch */
+/* unify safe-area math */
 @supports (padding: env(safe-area-inset-left)){
   body{
     padding-left: calc(var(--padx) + env(safe-area-inset-left));
@@ -78,7 +76,7 @@ body{
   }
 }
 
-/* Links (WM-like: understated, no underlines) */
+/* Links */
 a{ color: var(--cyan); text-decoration:none; }
 a:hover{ color: var(--green); }
 a:active{ color: var(--orange); }
@@ -86,7 +84,7 @@ a:active{ color: var(--orange); }
 /* Selection */
 ::selection{ background: rgba(166,226,46,0.22); }
 
-/* Hide Org TOC if anything sneaks in */
+/* Hide Org TOC */
 #table-of-contents, .toc, .org-ul.toc { display:none !important; }
 
 /* ---------- TOP SYSTEM BAR (h1) ---------- */
@@ -101,7 +99,7 @@ h1{
   display:flex;
   align-items:center;
 
-  padding: 0 calc(var(--padx) + env(safe-area-inset-left));
+  padding: 14px calc(var(--padx) + env(safe-area-inset-left)) 12px;
   background: rgba(16,19,23,0.98);
   border-bottom: 1px solid var(--line);
 
@@ -124,7 +122,7 @@ h1::after{
 }
 @keyframes blink { 0%,45%{opacity:1} 46%,100%{opacity:0} }
 
-/* ---------- WORKSPACE STRIP (first <p> after h1) ---------- */
+/* ---------- WORKSPACE STRIP (h1 + p) ---------- */
 
 h1 + p{
   position: fixed;
@@ -142,7 +140,6 @@ h1 + p{
   background: rgba(14,17,21,0.98);
   border-bottom: 1px solid var(--line);
 
-  /* WM workspace behavior */
   white-space: nowrap;
   overflow-x: auto;
   overflow-y: hidden;
@@ -154,7 +151,7 @@ h1 + p{
 /* hide scrollbar but keep scroll */
 h1 + p::-webkit-scrollbar{ height:0; }
 
-/* make tabs feel like i3/polybar segments (text + underline) */
+/* i3/tmux-like tabs */
 h1 + p a{
   display:inline-block;
   padding: 6px 10px;
@@ -164,36 +161,24 @@ h1 + p a{
   border-bottom: 2px solid transparent;
 }
 
-/* hover = bright + underline */
 h1 + p a:hover{
   color: var(--fg);
   border-bottom-color: var(--green);
 }
 
-/* "active" default hint (first link) */
+/* “active” default hint */
 h1 + p a:first-child{
   color: var(--fg);
   border-bottom-color: var(--green);
 }
 
-/* ---------- CONTENT CANVAS ---------- */
+/* ---------- Section headers (h2 = titlebar) ---------- */
 
-/* Keep paragraphs tight and intentional */
-p{
-  margin: 10px 0;
-  color: var(--fg);
-}
-
-/* ---------- SECTION BLOCKS ---------- */
-
-/* h2 becomes a “tiled window titlebar” */
 h2{
   margin: var(--section-gap) 0 10px 0;
   padding: 10px 12px;
 
-  /* a subtle plane behind each header (like a titlebar) */
   background: rgba(15,18,22,0.55);
-
   border: 1px solid var(--line);
   border-left: 4px solid var(--cyan);
 
@@ -204,63 +189,31 @@ h2{
   text-transform: uppercase;
 }
 
-/* Definition list block = “window body” */
-dl{
-  margin: 10px 0 0 0;
-  padding: var(--block-pad-y) var(--block-pad-x);
-
-  background: rgba(15,18,22,0.35);
-  border: 1px solid rgba(28,33,40,0.9);
-
-  display:grid;
-  grid-template-columns: 112px 1fr;
-  gap: 8px 14px;
-}
-
-dt{
-  margin:0;
-  color: var(--green);
-  font-weight: 800;
-}
-
-dd{
-  margin:0;
+/* Keep paragraphs sparse */
+p{
+  margin: 10px 0;
   color: var(--fg);
 }
 
-/* Add a faint divider between blocks when there are multiple dl in a row */
-dl + dl{
-  margin-top: 10px;
-}
-
-/* Optional: make strong text pop in body copy */
 strong{ color: var(--green); }
 
-/* Code looks like terminal hints, not “web” */
-code{
-  color: var(--orange);
-  background: rgba(16,19,23,0.7);
-  border: 1px solid rgba(28,33,40,0.9);
-  padding: 0.08rem 0.28rem;
-}
+/* ---------- Example panes (Org #+begin_example) ---------- */
 
-/* Pre blocks like panes */
-pre{
-  background: rgba(15,18,22,0.55);
+pre, pre.example{
+  background: var(--block);
   border: 1px solid var(--line);
-  padding: 12px 14px;
+  padding: 14px 16px;
+  margin: 12px 0 24px 0;
+
+  font-family: var(--font);
+  font-size: 14px;
+  line-height: 1.5;
+
   overflow-x: auto;
-  margin: 10px 0 0 0;
+  white-space: pre; /* preserve alignment */
 }
 
-/* Lists compact */
-ul, ol{
-  margin: 10px 0 0 0;
-  padding-left: 1.2rem;
-}
-li{ margin: 0.15rem 0; }
-
-/* ---------- MODELINE (last paragraph) ---------- */
+/* ---------- Modeline (last paragraph) ---------- */
 
 body > p:last-of-type{
   position: fixed;
@@ -282,9 +235,7 @@ body > p:last-of-type{
   color: var(--fg);
 }
 
-/* ---------- Small visual polish ---------- */
-
-/* Make the content feel like it sits on a canvas plane */
+/* Subtle divider line under bars (WM plane separation) */
 body::before{
   content:"";
   position: fixed;
@@ -292,5 +243,5 @@ body::before{
   top: calc(var(--topbar-h) + var(--workbar-h));
   height: 1px;
   background: rgba(28,33,40,0.45);
-  z-index: 180;
+  z-index: 185;
 }

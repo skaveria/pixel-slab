@@ -3,43 +3,51 @@
 #+html_head: <link rel="stylesheet" href="/doom-monokai.css">
 #+html_head: <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
 
-[[#dashboard][dashboard]] [[#logs][logs]] [[#media][media]] [[#ops][ops]] [[#notes][notes]] [[#about][about]]
+[[#dashboard][dashboard]] [[#system][system]] [[#git][git]] [[#event][event]] [[#notes][notes]] [[#about][about]]
 
 * STATUS
 :PROPERTIES:
 :CUSTOM_ID: dashboard
 :END:
 
-uptime  :: 3 days, 12 hours
-load    :: 0.22 · 0.11 · 0.08
-mem     :: 4.1 GiB / 11.2 GiB
-disk    :: 6.2 GiB / 110 GiB
-battery :: 82% · Charging
+#+begin_example
+uptime    3 days, 12 hours
+load      0.22 · 0.11 · 0.08
+mem       4.1 GiB / 11.2 GiB
+disk      6.2 GiB / 110 GiB
+battery   82% · charging
+#+end_example
 
 * SYSTEM
 :PROPERTIES:
-:CUSTOM_ID: logs
+:CUSTOM_ID: system
 :END:
 
-android :: 15
-kernel  :: 6.1.99-android14
-cpu     :: Tensor (8)
-java    :: 17.0.18
+#+begin_example
+android   15
+kernel    6.1.99-android14
+cpu       Tensor (8)
+java      17.0.18
+#+end_example
 
 * GIT
 :PROPERTIES:
-:CUSTOM_ID: media
+:CUSTOM_ID: git
 :END:
 
-rev   :: a1b2c3
-state :: clean
+#+begin_example
+rev       a1b2c3
+state     clean
+#+end_example
 
 * LAST EVENT
 :PROPERTIES:
-:CUSTOM_ID: ops
+:CUSTOM_ID: event
 :END:
 
+#+begin_example
 pigeonbot: whassup my dude
+#+end_example
 
 * NOTES
 :PROPERTIES:
