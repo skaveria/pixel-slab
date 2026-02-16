@@ -11,9 +11,45 @@
 <body>
   <div class="wrap">
     <div class="title">{{node}}<span class="cursor"></span></div>
-    <div class="subtitle">{{role}} · {{ip}}</div>
+    <div class="subtitle">{{role}} · {{ip}} · {{time}}</div>
 
     <div class="grid">
+      <div class="card">
+        <div class="k">os</div>
+        <div class="v mono">Android {{android}}</div>
+        <div class="hint">{{model}}</div>
+      </div>
+
+      <div class="card">
+        <div class="k">kernel</div>
+        <div class="v mono">{{kernel}}</div>
+        <div class="hint">cpu: {{cpu}}</div>
+      </div>
+
+      <div class="card">
+        <div class="k">uptime</div>
+        <div class="v good">{{uptime}}</div>
+        <div class="hint">load: {{load}}</div>
+      </div>
+
+      <div class="card">
+        <div class="k">memory</div>
+        <div class="v mono">{{mem}}</div>
+        <div class="hint">disk /: {{disk}}</div>
+      </div>
+
+      <div class="card">
+        <div class="k">battery</div>
+        <div class="v warn">{{battery}}</div>
+        <div class="hint">{{battery_status}}</div>
+      </div>
+
+      <div class="card">
+        <div class="k">network</div>
+        <div class="v mono">{{ip}}</div>
+        <div class="hint">{{ssid}}</div>
+      </div>
+
       <div class="card">
         <div class="k">nREPL</div>
         <div class="v good">:{{nrepl_port}}</div>
@@ -27,15 +63,15 @@
       </div>
 
       <div class="card">
-        <div class="k">status</div>
-        <div class="v mono">online</div>
-        <div class="hint">alive and listening</div>
+        <div class="k">java</div>
+        <div class="v mono">{{java}}</div>
+        <div class="hint">refresh: {{refresh_seconds}}s</div>
       </div>
 
       <div class="card">
-        <div class="k">theme</div>
-        <div class="v mono">doom-monokai</div>
-        <div class="hint">OLED-friendly</div>
+        <div class="k">git</div>
+        <div class="v mono">{{git_rev}}</div>
+        <div class="hint">{{git_state}}</div>
       </div>
     </div>
   </div>
@@ -44,9 +80,11 @@
     <div>
       <span class="tag"><span class="label">node</span> <span class="value">{{node}}</span></span>
       <span class="tag"><span class="label">role</span> <span class="value">{{role}}</span></span>
+      <span class="tag"><span class="label">git</span> <span class="value">{{git_rev}}</span></span>
     </div>
     <div>
       <span class="tag"><span class="label">ip</span> <span class="value">{{ip}}</span></span>
+      <span class="tag"><span class="label">nrepl</span> <span class="value">:{{nrepl_port}}</span></span>
       <span class="tag"><span class="label">http</span> <span class="value">:{{http_port}}</span></span>
     </div>
   </div>
