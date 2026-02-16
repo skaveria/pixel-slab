@@ -28,7 +28,7 @@
   (println "Reloading namespaces...")
   (refresh))
 
-(defn update []
+(defn slab-update []
   (git-pull)
   (reload)
   :updated)
