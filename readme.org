@@ -19,10 +19,10 @@
   None.
 
 * Workspaces
-  [[#Dashboard][dashboard]]
-  [[#Logs][logs]]
-  [[#Media][media]]
-  [[#Ops][ops]]
+[[*Dashboard][dashboard]]
+[[*Logs][logs]]
+[[*Media][media]]
+[[*Ops][ops]]
 
 * Logs
   No logs yet.
