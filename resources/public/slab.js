@@ -1,5 +1,6 @@
-// SlabOS compositor: key/value highlighting for Org example panes
-// Turns <pre class="example"> plain text into structured rows with spans.
+// SlabOS compositor (minimal)
+// Purpose: transform Org example panes into key/value rows.
+// IMPORTANT: Do NOT intercept links. Full page loads are desired.
 
 function escapeHtml(s) {
   return s.replaceAll("&", "&amp;")
@@ -10,11 +11,11 @@ function escapeHtml(s) {
 function classifyValue(v) {
   const t = v.toLowerCase();
 
-  // "bad" (pink)
+  // pink / bad states
   if (t.includes("error") || t.includes("failed") || t.includes("offline") || t.includes("down"))
     return "bad";
 
-  // "warn" (orange)
+  // orange / warn states
   if (t.includes("warn") || t.includes("charging") || t.includes("dirty") || t.includes("throttl") || t.includes("hot"))
     return "warn";
 
