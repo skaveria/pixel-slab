@@ -38,7 +38,7 @@ body{
   text-rendering: geometricPrecision;
 
   /* Make room for fixed bars */
-  padding-top: calc(var(--topbar-h) + var(--workbar-h) + 36px);
+  padding-top: calc(var(--topbar-h) + var(--workbar-h) + 18px);
   padding-bottom: calc(var(--modeline-h) + 18px);
 
   /* Curved screen padding */
