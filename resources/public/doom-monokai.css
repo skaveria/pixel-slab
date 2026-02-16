@@ -243,19 +243,16 @@ pre.example .muted{
 
 /* ---------- Modeline (last paragraph) ---------- */
 
+/* ---------- Endcap modeline (at end of scroll, not fixed) ---------- */
+
 body > p:last-of-type{
-  position: fixed;
-  left:0; right:0; bottom:0;
-  z-index: 200;
+  position: static;          /* not fixed */
+  margin: 28px 0 0 0;        /* space above the bar */
+  padding: 12px 14px;
 
-  margin:0;
-  height: var(--modeline-h);
-  display:flex;
-  align-items:center;
-
-  padding: 0 calc(var(--padx) + env(safe-area-inset-left));
   background: rgba(16,19,23,0.98);
-  border-top: 1px solid var(--line);
+  border: 1px solid var(--line);
+  border-left: 4px solid var(--orange);
 
   font-size: 14px;
   font-weight: 700;
