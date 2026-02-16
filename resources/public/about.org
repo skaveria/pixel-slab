@@ -5,7 +5,7 @@
 #+html_head: <script defer src="/slab.js"></script>
 #+html_head: <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
 
-[[/][dashboard]] [[/system.html][system]] [[/git.html][git]] [[/event.html][event]] [[/notes.html][notes]] [[/about.html][about]]
+[[file:index.html][dashboard]] [[file:system.html][system]] [[file:git.html][git]] [[file:event.html][event]] [[file:notes.html][notes]] [[file:about.html][about]]
 
 * ABOUT
 
