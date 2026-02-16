@@ -50,7 +50,7 @@ body{
   body{
     padding-left: calc(var(--padx) + env(safe-area-inset-left));
     padding-right: calc(var(--padx) + env(safe-area-inset-right));
-    padding-top: calc(var(--topbar-h) + var(--workbar-h) + 36px + env(safe-area-inset-top));
+    padding-top: calc(var(--topbar-h) + var(--workbar-h) + 18px + env(safe-area-inset-top));
     padding-bottom: calc(var(--modeline-h) + 18px + env(safe-area-inset-bottom));
   }
 }
@@ -63,7 +63,7 @@ a:active{ color: var(--orange); }
 /* ---------- TOP SYSTEM BAR (h1) ---------- */
 h1{
   position: fixed;
-  top:20; left:0; right:0;
+  top:0; left:0; right:0;
   z-index: 100;
 
   margin:0;
