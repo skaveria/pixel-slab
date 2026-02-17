@@ -41,14 +41,16 @@ html, body{
 }
 
 body{
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+
   font-family: var(--font);
   letter-spacing: 0.2px;
   line-height: 1.4;
-  -webkit-font-smoothing: antialiased;
-  text-rendering: geometricPrecision;
 
+  /* reserve space for fixed top bars */
   padding-top: calc(var(--topbar-h) + var(--workbar-h) + var(--content-gap-top));
-padding-bottom: calc(var(--modeline-h) + 48px + env(safe-area-inset-bottom));
   padding-left: var(--padx);
   padding-right: var(--padx);
 }
@@ -203,33 +205,23 @@ pre.example .bad{ color: var(--pink); font-weight: 800; }
 
 /* ---------- The modeline bar (explicit element) ---------- */
 #modeline{
-  position: static;
-  margin-top: 40px;
-
-  /* full-bleed bar */
-  width: 100vw;
-  margin-left: calc(-1 * var(--padx));
-  margin-right: calc(-1 * var(--padx));
+  margin-top: auto;   /* THIS is the magic */
 
   height: var(--modeline-h);
   display:flex;
   align-items:center;
 
-  /* reapply inner padding so text lines up */
-  padding: 0 calc(var(--padx) + env(safe-area-inset-left));
+  padding: 0 12px;
 
   background: rgba(16,19,23,0.98);
   border-top: 1px solid var(--line);
 
   white-space: nowrap;
   overflow-x: auto;
-  overflow-y: hidden;
-  -webkit-overflow-scrolling: touch;
-
   font-size: 15px;
-  font-weight: 500;
-  letter-spacing: 0.02em;
   color: var(--muted);
 }
-/*working*/
-#modeline::-webkit-scrollbar{ height:0; }
+
+#modeline::-webkit-scrollbar{
+  height:0;
+}
