@@ -1,14 +1,7 @@
 #+TITLE: slab-01 · media
-#+EXPORT_FILE_NAME: media.html
-
-#+HTML_HEAD: <link rel="stylesheet" href="doom-monokai.css?v=2">
-#+HTML_HEAD: <script defer src="slab.js?v=2"></script>
-#+HTML_HEAD: <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
-
 #+OPTIONS: html-style:nil html-scripts:nil toc:nil num:nil html-preamble:nil html-postamble:t
-
-[[file:index.html][dashboard]] [[file:system.html][system]] [[file:git.html][git]] [[file:event.html][event]] [[file:notes.html][notes]] [[file:about.html][about]] [[file:media.html][media]]
-
+#+HTML_HEAD: <link rel="stylesheet" href="doom-monokai.css?v=3">
+#+HTML_HEAD: <script defer src="slab.js?v=8"></script>
 * NOW PLAYING
 
 #+begin_export html

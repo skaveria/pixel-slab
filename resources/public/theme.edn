@@ -1,0 +1,8 @@
+{:header {:mode :wire
+          :hue :amber       ;; :green | :amber | :ice | :white
+          :text-weight 200  ;; 400..800
+          :glow 0.55        ;; 0.0..1.0
+          :cursor-glow 0.15 ;; 0.0..1.0
+          :cursor-width 10  ;; px
+          :cursor-height 18 ;; px
+          :cursor-blink-ms 1100}}
