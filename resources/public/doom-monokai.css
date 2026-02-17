@@ -234,3 +234,61 @@ pre.example .v{
 pre.example .warn{ color: var(--orange); font-weight: 700; }
 pre.example .bad{ color: var(--pink); font-weight: 800; }
 pre.example .muted{ color: var(--muted); }
+
+/* ---------- Full-bleed modeline bar ---------- */
+/* Requires you emit:
+   <div id="modeline">...</div>
+   in your Org export via #+begin_export html
+*/
+#modeline{
+  margin-top: 40px; /* separation from content */
+
+  /* full-bleed */
+  width: 100vw;
+  margin-left: calc(50% - 50vw);
+  margin-right: calc(50% - 50vw);
+
+  height: 44px;
+  display:flex;
+  align-items:center;
+
+  padding: 0 calc(var(--padx) + env(safe-area-inset-left));
+
+  background: rgba(14,17,21,0.98);
+  border-top: 1px solid var(--line);
+
+  white-space: nowrap;
+  overflow-x: auto;
+  overflow-y: hidden;
+  -webkit-overflow-scrolling: touch;
+
+  font-size: 15px;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  color: var(--muted);
+}
+
+#modeline::-webkit-scrollbar{ height:0; }
+
+
+/* ---------- Images + video scale sanely ---------- */
+img{
+  max-width: 100%;
+  height: auto;
+  display: block;
+  margin: 16px auto;
+  border: 1px solid var(--line);
+  background: var(--block);
+  padding: 6px;
+}
+
+video{
+  max-width: 100%;
+  width: 100%;
+  height: auto;
+  max-height: 50vh; /* adjust to taste */
+  display: block;
+  margin: 16px auto;
+  border: 1px solid var(--line);
+  background: #000;
+}
