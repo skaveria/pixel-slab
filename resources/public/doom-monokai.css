@@ -276,3 +276,18 @@ pre img,
 pre.example img{
   margin: 8px auto;
 }
+
+video{
+  max-width: 100%;
+  width: 100%;
+  height: auto;
+  display: block;
+  margin: 16px auto;
+  border: 1px solid var(--line);
+  background: #000;
+}
+
+/* optional: cap height on tall phones */
+video{
+  max-height: 50vh;
+}
