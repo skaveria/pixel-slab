@@ -1,8 +1,7 @@
 {:node "slab-01"
- :tabs [{:href "index.html"  :label "dashboard"}
+ :tabs [{:href "index.html"  :label "home"}
         {:href "system.html" :label "system"}
-        {:href "git.html"    :label "git!!"}
-        {:href "event.html"  :label "event"}
+        {:href "git.html"    :label "git"}
         {:href "notes.html"  :label "notes"}
         {:href "about.html"  :label "about"}
         {:href "media.html"  :label "media"}]}
