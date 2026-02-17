@@ -35,7 +35,7 @@ state     {{git_state}}
 * LAST EVENT
 
 #+begin_example
-event {{last_event}}
+event     {{last_event}}
 #+end_example
 
 * NOTES
