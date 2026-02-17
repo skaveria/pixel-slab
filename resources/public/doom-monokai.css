@@ -16,7 +16,7 @@
   --line: #262626;
 
   /* Text */
-  --fg: #f8f8f2;
+  --fg: #d6d1c4;
   --muted: #b7b1a1;
   --dim: #807a6a;
 
@@ -219,7 +219,9 @@ pre.example .k::before{
   margin-right: 2px;
 }
 
-pre.example .v{ color: var(--fg); }
+pre.example .v{
+  color: #f2efe6;   /* slightly brighter neutral for pane contrast */
+}
 
 pre.example .warn{ color: var(--orange); font-weight: 700; }
 pre.example .bad{ color: var(--pink); font-weight: 800; }
@@ -290,4 +292,43 @@ video{
 /* optional: cap height on tall phones */
 video{
   max-height: 50vh;
+}
+
+/* ---------- Paragraphs ---------- */
+
+p{
+  margin: 12px 0;
+  color: var(--fg);
+  line-height: 1.45;
+}
+
+/* ---------- Lists (Slab style) ---------- */
+
+ul{
+  list-style: none;        /* remove default bullets */
+  padding-left: 0;
+  margin: 12px 0 18px 0;
+}
+
+ul li{
+  position: relative;
+  padding-left: 18px;
+  margin: 6px 0;
+  color: var(--fg);
+}
+
+/* custom bullet marker */
+ul li::before{
+  content: "•";
+  position: absolute;
+  left: 0;
+  top: 0;
+  color: var(--yellow);    /* deep gold */
+  font-weight: 700;
+}
+
+/* tighten spacing inside panes */
+pre + ul,
+pre + p{
+  margin-top: 8px;
 }
