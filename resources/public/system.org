@@ -23,4 +23,7 @@ ip        192.168.0.106
 wifi      (ssid)
 #+end_example
 
-pixel-slab · system · 09:41
+
+#+begin_export html
+<div id="modeline">pixel-slab · nrepl:7888 · http:8080 · git:a1b2c3 · 09:41</div>
+#+end_export

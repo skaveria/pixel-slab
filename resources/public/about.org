@@ -17,4 +17,6 @@ SlabOS is a document-driven operating surface.
 - Server-authoritative Clojure backend (optional)
 - CLJS compositor layer (optional)
 
-pixel-slab · about · 09:41
+  #+begin_export html
+<div id="modeline">pixel-slab · nrepl:7888 · http:8080 · git:a1b2c3 · 09:41</div>
+#+end_export
