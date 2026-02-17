@@ -260,3 +260,19 @@ pre.example .muted{ color: var(--muted); }
 }
 
 #modeline::-webkit-scrollbar{ height:0; }
+
+/* ---------- Images ---------- */
+
+img{
+  max-width: 100%;        /* never overflow content column */
+  height: auto;           /* preserve aspect ratio */
+  display: block;         /* remove inline spacing weirdness */
+  margin: 16px auto;      /* vertical breathing + centered */
+  border-radius: 6px;     /* subtle polish */
+}
+
+/* If inside example panes, keep them tighter */
+pre img,
+pre.example img{
+  margin: 8px auto;
+}
