@@ -43,7 +43,7 @@ body{
   text-rendering: geometricPrecision;
 
   padding-top: calc(var(--topbar-h) + var(--workbar-h) + var(--content-gap-top));
-  padding-bottom: calc(var(--modeline-h) + 40px);
+  padding-bottom: calc(var(--modeline-h) + 24px);
 
   padding-left: var(--padx);
   padding-right: var(--padx);
@@ -209,6 +209,7 @@ pre.example .bad{ color: var(--pink); font-weight: 800; }
   align-items:center;
 
   padding: 0 calc(var(--padx) + env(safe-area-inset-left));
+  padding-top: 20px;
 
   background: rgba(14,17,21,0.98);   /* match workspace strip */
   border-top: 1px solid var(--line);
