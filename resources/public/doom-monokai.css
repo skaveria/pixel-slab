@@ -186,6 +186,14 @@ ul li::before{
 }
 
 /* ---------- Example panes ---------- */
+.example{
+  background: var(--block);
+  border: 1px solid var(--line);
+  margin: 12px 0 26px 0;
+  overflow: hidden;
+  padding: 14px 16px;
+}
+
 pre, pre.example{
   background: var(--block);
   border: 1px solid var(--line);
