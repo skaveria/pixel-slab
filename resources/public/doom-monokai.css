@@ -266,8 +266,9 @@ video{
   margin-right: calc(50% - 50vw);
 
   height: 44px;
-  display:flex;
-  align-items:center;
+  display: flex;
+  align-items: center;
+  gap: 10px;
 
   padding: 0 calc(var(--padx) + env(safe-area-inset-left));
 
@@ -285,4 +286,48 @@ video{
   color: var(--muted);
 }
 
-#modeline::-webkit-scrollbar{ height:0; }
+#modeline::-webkit-scrollbar{
+  height: 0;
+}
+
+/* ---------- Modeline segments ---------- */
+
+#modeline .node{
+  color: var(--muted);
+  font-weight: 600;
+}
+
+#modeline .sep{
+  color: var(--dim);
+  margin: 0 8px;
+}
+
+#modeline .seg{
+  display: inline-flex;
+  align-items: baseline;
+  gap: 6px;
+}
+
+#modeline .k{
+  color: var(--yellow);
+  font-weight: 800;
+}
+
+#modeline .k::before{
+  content: "";
+}
+
+#modeline .v{
+  color: var(--pane-fg);
+  font-weight: 500;
+}
+
+#modeline .v.warn{
+  color: var(--orange);
+  font-weight: 700;
+}
+
+#modeline .v.bad{
+  color: var(--pink);
+  font-weight: 800;
+}
