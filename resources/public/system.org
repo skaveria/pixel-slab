@@ -25,8 +25,8 @@ wifi      (ssid)
 
 * PARTYCAT
 It's time to party
+[[file:partycat.png]]
 
-[[file:partycat.png][partycat]]
 #+begin_export html
 <div id="modeline">pixel-slab · nrepl:7888 · http:8080 · git:a1b2c3 · 09:41</div>
 #+end_export
