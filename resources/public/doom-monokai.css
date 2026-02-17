@@ -347,3 +347,53 @@ video{
   color: var(--pink);
   font-weight: 800;
 }
+/* ---------- Workspace Strip (works for both old + injected) ---------- */
+/* Old pages: #content > h1.title + p
+   New injected: #content > p.slab-tabs
+*/
+#content > h1.title + p,
+#content > p.slab-tabs{
+  position: fixed;
+  top: var(--topbar-h);
+  left:0; right:0;
+  z-index: 190;
+
+  margin:0;
+  height: var(--workbar-h);
+  display:flex;
+  align-items:center;
+
+  padding: 0 calc(var(--padx) + env(safe-area-inset-left));
+  background: #181a1c;
+  border-bottom: 1px solid var(--line);
+
+  white-space: nowrap;
+  overflow-x: auto;
+  overflow-y: hidden;
+  -webkit-overflow-scrolling: touch;
+
+  font-size: 15px;
+}
+
+#content > h1.title + p::-webkit-scrollbar,
+#content > p.slab-tabs::-webkit-scrollbar{
+  height:0;
+}
+
+#content > h1.title + p a,
+#content > p.slab-tabs a{
+  display:inline-block;
+  padding: 6px 10px;
+  margin-right: 6px;
+
+  color: var(--muted);
+  border-bottom: 2px solid transparent;
+}
+
+#content > h1.title + p a:hover,
+#content > h1.title + p a.active,
+#content > p.slab-tabs a:hover,
+#content > p.slab-tabs a.active{
+  color: var(--fg);
+  border-bottom-color: var(--orange);
+}

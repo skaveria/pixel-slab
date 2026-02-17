@@ -52,6 +52,37 @@
       [(str/trim k) (str/trim v)])))
 
 ;; ------------------------------------------------------------
+;; Chrome manifest (single source of truth)
+;; ------------------------------------------------------------
+
+(def node-name "slab-01")
+
+(def tabs
+  [{:href "index.html"  :label "dashboard"}
+   {:href "system.html" :label "system"}
+   {:href "git.html"    :label "git"}
+   {:href "event.html"  :label "event"}
+   {:href "notes.html"  :label "notes"}
+   {:href "about.html"  :label "about"}
+   {:href "media.html"  :label "media"}])
+
+(defn- file-stem [filename]
+  (-> filename
+      (str/replace #"\.html$" "")
+      (str/replace #"\.htm$"  "")))
+
+(defn- current-page []
+  ;; Works for both http:// and file:// previews
+  (let [proto (.-protocol js/location)
+        p (.-pathname js/location)
+        base (if (or (nil? p) (= p "/")) "index.html" (basename p))]
+    (if (= proto "file:") (basename p) base)))
+
+(defn- page-label [page]
+  (or (:label (first (filter #(= (:href %) page) tabs)))
+      (file-stem page)))
+
+;; ------------------------------------------------------------
 ;; DOM helpers
 ;; ------------------------------------------------------------
 
@@ -89,30 +120,57 @@
     (append! seg v-el)
     seg))
 
+(defn- by-id [id] (.getElementById js/document id))
+
+(defn- qs [sel] (.querySelector js/document sel))
+
+(defn- mk-el
+  ([tag] (.createElement js/document tag))
+  ([tag class-name]
+   (let [e (.createElement js/document tag)]
+     (set! (.-className e) class-name)
+     e)))
+
+(defn- set-text! [el s]
+  (set! (.-textContent el) (str s))
+  el)
+
+(defn- append! [parent child]
+  (.appendChild parent child)
+  parent)
+
+(defn- insert-after! [new-node ref-node]
+  (when-let [p (.-parentNode ref-node)]
+    (if-let [n (.-nextSibling ref-node)]
+      (.insertBefore p new-node n)
+      (.appendChild p new-node)))
+  new-node)
+
+(defn- ensure-content-root! []
+  ;; Org export gives you #content; if not, we make one and wrap body children.
+  (or (by-id "content")
+      (let [content (mk-el "div" "content")
+            body (.-body js/document)
+            kids (array-seq (.-childNodes body))]
+        (set! (.-id content) "content")
+        (doseq [k kids]
+          ;; Move into content (avoid moving script tags if any are at end; but safe for your pages)
+          (.appendChild content k))
+        (.appendChild body content)
+        content)))
+
 ;; ------------------------------------------------------------
 ;; Active tab highlight
 ;; ------------------------------------------------------------
-
 (defn highlight-active-tab! []
-  (when-let [bar (.querySelector js/document "h1 + p")]
-    (let [current (current-page-name)
+  (when-let [bar (qs "#content > p.slab-tabs")]
+    (let [current (current-page)
           links (array-seq (.querySelectorAll bar "a"))]
-      (doseq [a links]
-        (.. a -classList (remove "active")))
-
+      (doseq [a links] (.. a -classList (remove "active")))
       (when-let [match (first (filter (fn [a]
-                                        (= (basename (.getAttribute a "href"))
-                                           current))
+                                        (= (basename (.getAttribute a "href")) current))
                                       links))]
-        (.. match -classList (add "active")))
-
-      (when (and (= current "index.html")
-                 (seq links)
-                 (nil? (first (filter (fn [a]
-                                        (= (basename (.getAttribute a "href"))
-                                           current))
-                                      links))))
-        (.. (first links) -classList (add "active"))))))
+        (.. match -classList (add "active"))))))
 
 ;; ------------------------------------------------------------
 ;; Modeline (structured segments)
@@ -241,6 +299,8 @@
         (.catch (fn [_] nil)))))
 
 (defn tick! []
+  (ensure-chrome!)
+  (set! (.. js/document -documentElement -dataset -slab) "1")
   (highlight-active-tab!)
   (mount-all-panes!)
   (-> (fetch-state!)
@@ -254,3 +314,63 @@
 (defn init []
   (tick!)
   (js/setInterval tick! poll-ms))
+
+(defn- ensure-titlebar! []
+  (let [content (ensure-content-root!)
+        existing (qs "#content > h1.title")
+        page (current-page)
+        title (str node-name " · " (page-label page))]
+    (or existing
+        (let [h (mk-el "h1" "title")]
+          (set-text! h title)
+          ;; IMPORTANT: use firstElementChild, not firstChild (skip whitespace)
+          (if-let [first-el (.-firstElementChild content)]
+            (.insertBefore content h first-el)
+            (.appendChild content h))
+          h))))
+
+(defn- ensure-tabsbar! []
+  (let [content (ensure-content-root!)
+        existing (qs "#content > p.slab-tabs")]
+    (or existing
+        (let [p (mk-el "p" "slab-tabs")
+              title (or (qs "#content > h1.title") (ensure-titlebar!))]
+          ;; build links
+          (doseq [{:keys [href label]} tabs]
+            (let [a (mk-el "a")]
+              (.setAttribute a "href" href)
+              (set-text! a label)
+              (append! p a)))
+
+          ;; IMPORTANT: insert after the title using element-sibling logic
+          (if-let [next-el (.-nextElementSibling title)]
+            (.insertBefore content p next-el)
+            (.appendChild content p))
+
+          p))))
+
+(defn- ensure-postamble! []
+  ;; Org gives #postamble when html-postamble:t; if missing, we create one.
+  (or (by-id "postamble")
+      (let [p (mk-el "div" "status")]
+        (set! (.-id p) "postamble")
+        (.appendChild (.-body js/document) p)
+        p)))
+
+(defn- ensure-modeline-el! []
+  (let [post (ensure-postamble!)
+        existing (by-id "modeline")]
+    (or existing
+        (let [m (mk-el "div")]
+          (set! (.-id m) "modeline")
+          ;; default template string (your renderer will override with spans later)
+          (.setAttribute m "data-template" "pixel-slab · :nrepl {{nrepl}} · :http {{http}} · :time {{time}} · :battery {{battery}} · :volume {{volume}}")
+          (append! post m)
+          m))))
+
+(defn ensure-chrome! []
+  ;; Safe to call every tick (idempotent).
+  (ensure-titlebar!)
+  (ensure-tabsbar!)
+  (ensure-modeline-el!)
+  nil)
