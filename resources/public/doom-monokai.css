@@ -5,9 +5,9 @@
 */
 
 :root{
-  --bg: #0c0c0c;
-  --block: #141414;
-  --line: #262626;
+  --bg: #1c1e1f;
+  --block: #202020;
+  --line: #2d2e2e;
 
   --fg: #e8e3d6;
   --pane-fg: #f2efe6;
@@ -84,7 +84,7 @@ h1{
 
   padding: 20px calc(var(--padx) + env(safe-area-inset-left)) 16px;
 
-  background: rgba(16,19,23,0.98);
+  background: #202020;
   border-bottom: 1px solid var(--line);
 
   font-size: 22px;
@@ -117,7 +117,7 @@ h1 + p{
   align-items:center;
 
   padding: 0 calc(var(--padx) + env(safe-area-inset-left));
-  background: rgba(14,17,21,0.98);
+  background: #181a1c;
   border-bottom: 1px solid var(--line);
 
   white-space: nowrap;
@@ -271,7 +271,7 @@ video{
 
   padding: 0 calc(var(--padx) + env(safe-area-inset-left));
 
-  background: rgba(14,17,21,0.98);
+  background: #181a1c;
   border-top: 1px solid var(--line);
 
   white-space: nowrap;
