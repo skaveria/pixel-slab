@@ -51,23 +51,72 @@
     (when-let [[_ k v] (re-matches #"^\s*([^\s]+)\s{2,}(.+)$" line)]
       [(str/trim k) (str/trim v)])))
 
+;; ------------------------------------------------------------
+;; DOM helpers
+;; ------------------------------------------------------------
+
+(defn- append! [parent child]
+  (.appendChild parent child)
+  parent)
+
+(defn- mk-span [cls txt]
+  (let [el (.createElement js/document "span")]
+    (set! (.-className el) cls)
+    (set! (.-textContent el) (str txt))
+    el))
+
+(defn- clear-children! [el]
+  (set! (.-innerHTML el) "")
+  el)
+
+(defn- state-val [state k fallback]
+  (let [v (when state (aget state k))]
+    (if (or (nil? v) (undefined? v) (= "" (str v)))
+      fallback
+      (str v))))
+
+(defn- mk-seg
+  "Create: <span class='seg'><span class='k'>..</span><span class='v ..'>..</span></span>"
+  [k v]
+  (let [seg (.createElement js/document "span")
+        k-el (mk-span "k" k)
+        v-el (mk-span "v" v)
+        klass (classify-value v)]
+    (set! (.-className seg) "seg")
+    (when (seq klass)
+      (.. v-el -classList (add klass)))
+    (append! seg k-el)
+    (append! seg v-el)
+    seg))
+
+;; ------------------------------------------------------------
+;; Active tab highlight
+;; ------------------------------------------------------------
+
 (defn highlight-active-tab! []
   (when-let [bar (.querySelector js/document "h1 + p")]
     (let [current (current-page-name)
           links (array-seq (.querySelectorAll bar "a"))]
-      (doseq [a links] (.classList.remove (.-classList a) "active"))
+      (doseq [a links]
+        (.. a -classList (remove "active")))
+
       (when-let [match (first (filter (fn [a]
                                         (= (basename (.getAttribute a "href"))
                                            current))
                                       links))]
-        (.classList.add (.-classList match) "active"))
-      (when (and (= current "index.html") (seq links)
-                 (nil? (first (filter (fn [a]
-                                        (= (basename (.getAttribute a "href")) current))
-                                      links))))
-        (.classList.add (.-classList (first links)) "active")))))
+        (.. match -classList (add "active")))
 
-;; ---------------- modeline (structured) ----------------
+      (when (and (= current "index.html")
+                 (seq links)
+                 (nil? (first (filter (fn [a]
+                                        (= (basename (.getAttribute a "href"))
+                                           current))
+                                      links))))
+        (.. (first links) -classList (add "active"))))))
+
+;; ------------------------------------------------------------
+;; Modeline (structured segments)
+;; ------------------------------------------------------------
 
 (defn- ensure-modeline! []
   (when-let [post (.getElementById js/document "postamble")]
@@ -79,62 +128,100 @@
                          d))]
       modeline)))
 
-(defn- mk-span [cls text]
-  (let [s (.createElement js/document "span")]
-    (set! (.-className s) cls)
-    (set! (.-textContent s) (str text))
-    s))
-
-(defn- state-val
-  "Get a state key (string) with fallback. Also supports templated values."
-  [state k fallback]
-  (let [v (when state (aget state k))]
-    (cond
-      (or (nil? v) (undefined? v) (= "" (str v))) fallback
-      :else (str v))))
-
-(defn render-modeline!
-  "Render a WM-style bar: key/value segments with a dot separator."
-  [state]
+(defn render-modeline! [state]
   (when-let [m (ensure-modeline!)]
-    ;; Clear existing children
-    (set! (.-innerHTML m) "")
-
-    ;; Values (fallbacks are visible but calm)
-    (let [nrepl   (state-val state "nrepl"   "—")
-          http    (state-val state "http"    "—")
-          time    (state-val state "time"    "—")
+    (clear-children! m)
+    (let [nrepl   (state-val state "nrepl" "—")
+          http    (state-val state "http" "—")
+          time    (state-val state "time" "—")
           battery (state-val state "battery" "—")
-          volume  (state-val state "volume"  "—")]
+          volume  (state-val state "volume" "—")
+          gitrev  (state-val state "git_rev" "—")
+          sep-el  (fn [] (mk-span "sep" "·"))]
 
-      ;; Node label (no key)
-      (.appendChild m (mk-span "node" "pixel-slab"))
+      (append! m (mk-span "node" "pixel-slab"))
 
-      ;; Separator helper
-      (let [sep (fn [] (.appendChild m (mk-span "sep" "·")))]
-        (sep)
+      (doseq [seg [(sep-el) (mk-seg ":nrepl" nrepl)
+                   (sep-el) (mk-seg ":http" http)
+                   (sep-el) (mk-seg ":time" time)
+                   (sep-el) (mk-seg ":battery" battery)
+                   (sep-el) (mk-seg ":volume" volume)
+                   (sep-el) (mk-seg ":git" gitrev)]]
+        (append! m seg))))
+  nil)
 
-        ;; segment helper: :key value
-        (let [seg (fn [k v]
-                    (let [seg-el (.createElement js/document "span")
-                          _ (set! (.-className seg-el) "seg")
-                          k-el (mk-span "k" k)
-                          v-el (mk-span "v" v)
-                          klass (classify-value v)]
-                      (when (seq klass)
-                        (.classList.add (.-classList v-el) klass))
-                      (.appendChild seg-el k-el)
-                      (.appendChild seg-el v-el)
-                      (.appendChild m seg-el)))]
+;; ------------------------------------------------------------
+;; Pane transform (unchanged from your working version)
+;; ------------------------------------------------------------
 
-          (seg ":nrepl" nrepl)   (sep)
-          (seg ":http"  http)    (sep)
-          (seg ":time"  time)    (sep)
-          (seg ":battery" battery) (sep)
-          (seg ":volume" volume))))))
+(defn mount-pane! [pre]
+  (when-not (= "1" (.getAttribute pre "data-slab-mounted"))
+    (.setAttribute pre "data-slab-mounted" "1")
 
-;; ---------------- panes (kept minimal here) ----------------
-;; You can keep your existing pane mount/render code; modeline is independent.
+    (let [raw (-> (.-textContent pre) (str/replace #"\r\n" "\n") (str/trimr))
+          lines (->> (str/split raw #"\n") (map str/trimr) (into []))
+          [pane-type lines] (if (and (seq lines) (str/starts-with? (first lines) "@"))
+                              [(-> (subs (first lines) 1) str/trim str/lower-case)
+                               (subvec lines 1)]
+                              [nil lines])
+          _ (when pane-type
+              (.. pre -classList (add (str "pane-" pane-type))))
+          non-empty (->> lines (filter #(seq (str/trim %))) (into []))
+          kv-pairs (->> non-empty (map split-kv) (filter some?) (into []))
+          is-kv (>= (count kv-pairs) (max 1 (js/Math.floor (* 0.7 (count non-empty)))))]
+
+      (if-not is-kv
+        (do
+          (.setAttribute pre "data-pane-kind" "text")
+          (.setAttribute pre "data-template" (str/join "\n" lines)))
+        (do
+          (.setAttribute pre "data-pane-kind" "kv")
+          (.. pre -classList (add "pane-kv"))
+
+          (let [kv (.createElement js/document "div")]
+            (set! (.-className kv) "kv")
+
+            (doseq [[k v] kv-pairs]
+              (let [row (.createElement js/document "div")
+                    kdiv (.createElement js/document "div")
+                    vdiv (.createElement js/document "div")]
+                (set! (.-className row) "row")
+                (set! (.-className kdiv) "k")
+                (set! (.-textContent kdiv) k)
+
+                (set! (.-className vdiv) "v")
+                (.setAttribute vdiv "data-template" v)
+                (set! (.-textContent vdiv) v)
+
+                (.appendChild row kdiv)
+                (.appendChild row vdiv)
+                (.appendChild kv row)))
+
+            (set! (.-textContent pre) "")
+            (.appendChild pre kv)))))))
+
+(defn mount-all-panes! []
+  (doseq [pre (array-seq (.querySelectorAll js/document "pre.example"))]
+    (mount-pane! pre)))
+
+(defn render-panes! [state]
+  (doseq [pre (array-seq (.querySelectorAll js/document "pre.example"))]
+    (let [kind (.getAttribute pre "data-pane-kind")]
+      (cond
+        (= kind "text")
+        (let [tmpl (.getAttribute pre "data-template")]
+          (set! (.-textContent pre) (apply-template tmpl state)))
+
+        (= kind "kv")
+        (doseq [vdiv (array-seq (.querySelectorAll pre ".v"))]
+          (let [tmpl (.getAttribute vdiv "data-template")
+                rendered (apply-template tmpl state)
+                klass (classify-value rendered)]
+            (set! (.-textContent vdiv) rendered)
+            (.. vdiv -classList (remove "warn"))
+            (.. vdiv -classList (remove "bad"))
+            (when (seq klass)
+              (.. vdiv -classList (add klass)))))))))
 
 (defn dev-state-override []
   (let [x (aget js/window "SLAB_STATE")]
@@ -155,9 +242,14 @@
 
 (defn tick! []
   (highlight-active-tab!)
+  (mount-all-panes!)
   (-> (fetch-state!)
       (.then (fn [state]
-               (render-modeline! state)))))
+               (if state
+                 (do
+                   (render-panes! state)
+                   (render-modeline! state))
+                 (render-modeline! (clj->js {})))))))
 
 (defn init []
   (tick!)
