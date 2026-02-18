@@ -1,15 +1,17 @@
 (ns pixel-slab.web
-  (:require [clojure.java.io :as io]
+  (:require [clojure.edn :as edn]
+            [clojure.java.io :as io]
             [clojure.string :as str]
             [org.httpkit.server :as http]
-            [pixel-slab.state :as state]))
+            [pixel-slab.state :as state]
+            [pixel-slab.registry :as registry]))
 
 (defonce ^:private server* (atom nil))
 
-(defn running? [] (some? @server*))
+(defn running? []
+  (some? @server*))
 
-(defn stop!
-  []
+(defn stop! []
   (when-let [stop-fn @server*]
     (stop-fn)
     (reset! server* nil)
@@ -30,7 +32,7 @@
     :else                        "application/octet-stream"))
 
 (def ^:private public-dir
-  ;; Serve from filesystem first so shadow-cljs outputs are visible immediately.
+  ;; Serve from filesystem first so built js-out is available immediately.
   (io/file "resources" "public"))
 
 (defn- file-response [uri]
@@ -39,25 +41,28 @@
     (when (and (.exists f) (.isFile f))
       {:status 200
        :headers {"Content-Type" (content-type uri)
-                 ;; helps a lot during dev; you can relax later
                  "Cache-Control" "no-store"}
        :body (io/input-stream f)})))
 
 (defn- resource-response [uri]
   ;; Fallback: classpath resource (useful if you ever package this)
   (let [resource-path (str "public/" (subs uri 1))]
-    (if-let [res (io/resource resource-path)]
+    (when-let [res (io/resource resource-path)]
       {:status 200
        :headers {"Content-Type" (content-type uri)
                  "Cache-Control" "no-store"}
-       :body (io/input-stream res)}
-      {:status 404
-       :headers {"Content-Type" "text/plain; charset=utf-8"}
-       :body (str "not found: " uri)})))
+       :body (io/input-stream res)})))
+
+(defn- not-found [uri]
+  {:status 404
+   :headers {"Content-Type" "text/plain; charset=utf-8"
+             "Cache-Control" "no-store"}
+   :body (str "not found: " uri)})
 
 (defn- static-response [uri]
   (or (file-response uri)
-      (resource-response uri)))
+      (resource-response uri)
+      (not-found uri)))
 
 (defn- json-escape [s]
   (-> (str s)
@@ -76,11 +81,29 @@
           (str "\"" (name k) "\":\"" (json-escape v) "\"")))
        "}"))
 
+(defn- edn-response [status m]
+  {:status status
+   :headers {"Content-Type" "application/edn; charset=utf-8"
+             "Cache-Control" "no-store"}
+   :body (pr-str m)})
+
+(defn- read-edn-body [req]
+  (let [b (:body req)]
+    (if-not b
+      {}
+      (let [s (slurp b)]
+        (if (seq (str/trim (str s)))
+          (edn/read-string s)
+          {})))))
+
 (defn- handler []
   (fn [req]
     (let [uri (:uri req)]
       (cond
+        ;; -------------------------
         ;; API
+        ;; -------------------------
+
         (= uri "/api/state")
         (let [m (state/snapshot)]
           {:status 200
@@ -88,22 +111,40 @@
                      "Cache-Control" "no-store"}
            :body (map->json m)})
 
-        ;; Root -> index.html
+        (= uri "/api/run-token")
+        (let [m     (read-edn-body req)
+              token (:token m)
+              f     (get registry/slab-registry token)]
+          (if-not f
+            (edn-response 404 {:type :text
+                               :body (str "Unknown token: " token)
+                               :meta {:token token}})
+            (try
+              (edn-response 200 (f m))
+              (catch Exception e
+                (edn-response 500 {:type :text
+                                   :body (str "ERROR: " (.getMessage e))
+                                   :meta {:token token}})))))
+
+        ;; -------------------------
+        ;; Root
+        ;; -------------------------
+
         (= uri "/")
         (static-response "/index.html")
 
-        ;; Any static file under resources/public (filesystem first)
+        ;; -------------------------
+        ;; Static files
+        ;; -------------------------
+
         (re-matches #"/[A-Za-z0-9._/-]+" uri)
         (static-response uri)
 
         :else
-        {:status 404
-         :headers {"Content-Type" "text/plain; charset=utf-8"}
-         :body "not found"}))))
+        (not-found uri)))))
 
 (defn start!
   [{:keys [ip port]
-    ;; IMPORTANT: 0.0.0.0 allows phone/LAN access
     :or {ip "0.0.0.0" port 8080}}]
   (when (running?) (stop!))
   (let [stop-fn (http/run-server (handler) {:ip ip :port port})]

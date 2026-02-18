@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2026-02-17 Tue 18:39 -->
+<!-- 2026-02-17 Tue 19:55 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>slab-01 · dashboard</title>
@@ -16,10 +16,10 @@
 <body>
 <div id="content" class="content">
 <h1 class="title">slab-01 · dashboard</h1>
-<div id="outline-container-orgc14649d" class="outline-2">
-<h2 id="orgc14649d">STATUS</h2>
-<div class="outline-text-2" id="text-orgc14649d">
-<pre class="example" id="orgf1fdfdd">
+<div id="outline-container-org7a82cdb" class="outline-2">
+<h2 id="org7a82cdb">STATUS</h2>
+<div class="outline-text-2" id="text-org7a82cdb">
+<pre class="example" id="org5a38302">
 @kv
 uptime    {{uptime}}
 load      {{load}}
@@ -29,10 +29,10 @@ battery   {{battery}}
 </pre>
 </div>
 </div>
-<div id="outline-container-org20db11c" class="outline-2">
-<h2 id="org20db11c">SERVICES</h2>
-<div class="outline-text-2" id="text-org20db11c">
-<pre class="example" id="org7c1da9e">
+<div id="outline-container-org8effd9f" class="outline-2">
+<h2 id="org8effd9f">SERVICES</h2>
+<div class="outline-text-2" id="text-org8effd9f">
+<pre class="example" id="org7db35d9">
 @kv
 nrepl     {{nrepl}}
 http      {{http}}
@@ -40,32 +40,38 @@ sshd      {{sshd}}
 </pre>
 </div>
 </div>
-<div id="outline-container-org878c960" class="outline-2">
-<h2 id="org878c960">GIT</h2>
-<div class="outline-text-2" id="text-org878c960">
-<pre class="example" id="org368b740">
+<div id="outline-container-orgf85df5e" class="outline-2">
+<h2 id="orgf85df5e">GIT</h2>
+<div class="outline-text-2" id="text-orgf85df5e">
+<pre class="example" id="org3c04419">
 @kv
 rev       {{git_rev}}
 state     {{git_state}}
 </pre>
 </div>
 </div>
-<div id="outline-container-orgab29a14" class="outline-2">
-<h2 id="orgab29a14">LAST EVENT</h2>
-<div class="outline-text-2" id="text-orgab29a14">
-<pre class="example" id="org4dc5f40">
+<div id="outline-container-orgd0be906" class="outline-2">
+<h2 id="orgd0be906">LAST EVENT</h2>
+<div class="outline-text-2" id="text-orgd0be906">
+<pre class="example" id="org37094f9">
 @kv
 event     {{last_event}}
 </pre>
 </div>
 </div>
-<div id="outline-container-org397e80e" class="outline-2">
-<h2 id="org397e80e">NOTES</h2>
-<div class="outline-text-2" id="text-org397e80e">
+<div id="outline-container-org759ce69" class="outline-2">
+<h2 id="org759ce69">NOTES</h2>
+<div class="outline-text-2" id="text-org759ce69">
 <ul class="org-ul">
 <li>This page is the primary operating surface.</li>
 <li>Org defines structure; the compositor fills live state.</li>
-<li>Full page loads; no SPA.</li>
+<li><p>
+Full page loads; no SPA.
+</p>
+
+<p>
+{{echo*}}
+</p></li>
 </ul>
 </div>
 </div>

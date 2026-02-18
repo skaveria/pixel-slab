@@ -1,4 +1,3 @@
-;; src-cljs/slab/dom.cljs
 (ns slab.dom
   (:require [slab.render :as render]))
 
@@ -6,20 +5,35 @@
   (.querySelector js/document sel))
 
 (defn ensure-output-slot!
-  "Find the output slot for a token-id. Returns the slot element or nil.
-  Expected markup: <div data-slab-slot=\"TOKEN-ID\"></div>"
-  [{:keys [token-id]}]
+  "Find output slot by token-id.
+  If missing, create one right after the token element."
+  [{:keys [token-id]} ^js token-el]
   (when token-id
-    (q1 (str "[data-slab-slot=\"" token-id "\"]"))))
+    (or (q1 (str "[data-slab-slot=\"" token-id "\"]"))
+        (when token-el
+          (let [slot (.createElement js/document "div")]
+            (set! (.-className slot) "slab-output-slot")
+            (.setAttribute slot "data-slab-slot" token-id)
+            (when-let [p (.-parentNode token-el)]
+              (if-let [n (.-nextSibling token-el)]
+                (.insertBefore p slot n)
+                (.appendChild p slot)))
+            slot)))))
 
 (defn clear! [^js el]
   (when el
     (set! (.-innerHTML el) "")
     el))
 
-(defn terminal-block-node
-  "Create terminal-style output block node.
-  NOTE: map these class names to your existing CSS example container styles."
+(defn- example-box-node
+  "Outer chrome box. Uses your existing .example styling."
+  []
+  (let [box (.createElement js/document "div")]
+    (set! (.-className box) "example slab-output")
+    box))
+
+(defn- terminal-node
+  "Inner terminal output."
   [{:keys [text loading?]}]
   (let [pre (.createElement js/document "pre")]
     (set! (.-className pre) "slab-terminal")
@@ -29,8 +43,8 @@
             :else (or text "")))
     pre))
 
-(defn media-block-node
-  "Create media-scaled container node and append rich content."
+(defn- media-node
+  "Inner media container. Map .slab-media to your existing scaled media CSS."
   [rich-node]
   (let [wrap (.createElement js/document "div")]
     (set! (.-className wrap) "slab-media")
@@ -40,26 +54,32 @@
 (defn show-loading! [slot]
   (when slot
     (clear! slot)
-    (.appendChild slot (terminal-block-node {:loading? true}))
+    (let [box (example-box-node)]
+      (.appendChild box (terminal-node {:loading? true}))
+      (.appendChild slot box))
     slot))
 
 (defn show-text! [slot {:keys [body]}]
   (when slot
     (clear! slot)
-    (.appendChild slot (terminal-block-node {:text body}))
+    (let [box (example-box-node)]
+      (.appendChild box (terminal-node {:text body}))
+      (.appendChild slot box))
     slot))
 
 (defn show-rich! [slot {:keys [body]}]
   (when slot
     (clear! slot)
-    (let [node (render/render-rich body)]
-      (.appendChild slot (media-block-node node)))
+    (let [box  (example-box-node)
+          node (render/render-rich body)]
+      (.appendChild box (media-node node))
+      (.appendChild slot box))
     slot))
 
-(defn show-error!
-  "Raw, honest error output."
-  [slot err]
+(defn show-error! [slot err]
   (when slot
     (clear! slot)
-    (.appendChild slot (terminal-block-node {:text (str err)}))
+    (let [box (example-box-node)]
+      (.appendChild box (terminal-node {:text (str err)}))
+      (.appendChild slot box))
     slot))

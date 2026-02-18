@@ -457,3 +457,22 @@ video{
   color: var(--fg);
   border-bottom-color: var(--orange);
 }
+
+/* Interactive token: looks like a command, not a button */
+.slab-token--interactive {
+  color: var(--hdr-color);          /* reuse your header hue */
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.18em;
+  cursor: pointer;
+  user-select: none;
+  white-space: nowrap;
+}
+
+.slab-token--interactive:hover {
+  filter: brightness(1.08);
+}
+
+.slab-token--interactive:active {
+  filter: brightness(0.95);
+}

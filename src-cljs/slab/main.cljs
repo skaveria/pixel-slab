@@ -4,6 +4,7 @@
             [slab.config :as cfg]
             [slab.chrome :as chrome]
             [slab.panes :as panes]
+            [slab.tokens :as tokens]
             [slab.theme :as theme]
             [slab.state :as state]))
 
@@ -91,6 +92,9 @@
     ;; interactive token clicks
     (events/attach!)
 
+    ;; build clickable {{name*}} tokens + slots
+    (tokens/hydrate-interactive-tokens!)
+
     ;; tabs.edn once
     (-> (cfg/fetch-tabs!)
         (.then (fn [_]
@@ -103,7 +107,7 @@
     (js/console.log "slab client online (full)")))
 
 (defn init! []
-  ;; If we run before <body> exists, delay until DOM is ready.
+  ;; Delay until <body> exists.
   (if (.-body js/document)
     (start!)
     (.addEventListener js/document "DOMContentLoaded" start!)))
