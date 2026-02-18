@@ -458,21 +458,20 @@ video{
   border-bottom-color: var(--orange);
 }
 
-/* Interactive token: looks like a command, not a button */
+/* Interactive token: subtle command-like affordance */
 .slab-token--interactive {
-  color: var(--hdr-color);          /* reuse your header hue */
-  text-decoration: underline;
-  text-decoration-thickness: 1px;
-  text-underline-offset: 0.18em;
+  color: #a6e22e;   /* your green */
+  text-decoration: none;
   cursor: pointer;
   user-select: none;
+  font-weight: 500;
   white-space: nowrap;
 }
 
 .slab-token--interactive:hover {
-  filter: brightness(1.08);
+  opacity: 0.85;
 }
 
 .slab-token--interactive:active {
-  filter: brightness(0.95);
+  opacity: 0.65;
 }

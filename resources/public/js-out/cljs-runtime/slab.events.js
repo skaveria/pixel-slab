@@ -15,8 +15,8 @@ return null;
 if(cljs.core.truth_(slab.util.dataset(el,"slabAction"))){
 return el;
 } else {
-var G__6142 = el.parentElement;
-el = G__6142;
+var G__6125 = el.parentElement;
+el = G__6125;
 continue;
 
 }

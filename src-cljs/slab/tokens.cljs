@@ -44,7 +44,7 @@
     (.setAttribute el "data-slab-token-id" token-id)
     (when section
       (.setAttribute el "data-slab-section" section))
-    (set! (.-textContent el) (str token "*"))
+    (set! (.-textContent el) (str "[" token "*]"))
     el))
 
 (defn- mk-slot-el [token-id]
